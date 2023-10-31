@@ -227,7 +227,7 @@ class trainer():
                 amape.append(metrics[1])    # mape
                 armse.append(metrics[2])    # rmse
 
-        log = '(On average over 12 horizons) Test MAE: {:.2f} | Test RMSE: {:.2f} | Test MAPE: {:.2f}% |'
+        log = '(On average over 12 horizons) Test MAE: {:.4f} | Test RMSE: {:.4f} | Test MAPE: {:.4f}% |'
         print(log.format(np.mean(amae),np.mean(armse),np.mean(amape) * 100))
 
         if save:

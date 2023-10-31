@@ -64,7 +64,7 @@ class D2STGNN(nn.Module):
         self.embedding      = nn.Linear(self._in_feat, self._hidden_dim)
 
         # time embedding
-        self.T_i_D_emb  = nn.Parameter(torch.empty(288, model_args['time_emb_dim']))
+        self.T_i_D_emb  = nn.Parameter(torch.empty(4, model_args['time_emb_dim'])) # time in day => 4
         self.D_i_W_emb  = nn.Parameter(torch.empty(7, model_args['time_emb_dim']))
 
         # Decoupled Spatial Temporal Layer
@@ -111,8 +111,8 @@ class D2STGNN(nn.Module):
         node_emb_u  = self.node_emb_u  # [N, d]
         node_emb_d  = self.node_emb_d  # [N, d]
         # time slot embedding
-        time_in_day_feat = self.T_i_D_emb[(history_data[:, :, :, num_feat] * 288).type(torch.LongTensor)]    # [B, L, N, d]
-        day_in_week_feat = self.D_i_W_emb[(history_data[:, :, :, num_feat+1]).type(torch.LongTensor)]          # [B, L, N, d]
+        time_in_day_feat = self.T_i_D_emb[(history_data[:, :, :, num_feat] * 4).type(torch.LongTensor)]    # [B, L, N, d] time in day = 4
+        day_in_week_feat = self.D_i_W_emb[(history_data[:, :, :, num_feat+1]).type(torch.LongTensor)]      # [B, L, N, d]
         # traffic signals
         history_data = history_data[:, :, :, :num_feat]
 

@@ -18,7 +18,8 @@ import setproctitle
 def main(**kwargs):
     set_config(0)
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', type=str, default='METR-LA', help='Dataset name.')
+    parser.add_argument('--dataset', type=str, default='CHUNGNAM', help='Dataset name.')
+    # parser.add_argument('--dataset', type=str, default='METR-LA', help='Dataset name.')
     # parser.add_argument('--dataset', type=str, default='PEMS-BAY', help='Dataset name.')
     # parser.add_argument('--dataset', type=str, default='PEMS04', help='Dataset name.')
     # parser.add_argument('--dataset', type=str, default='PEMS08', help='Dataset name.')
