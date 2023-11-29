@@ -11,7 +11,7 @@ import pickle
 import torch
 import torch.nn.functional as F
 
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 def generate_graph_seq2seq_io_data(
         df, x_offsets, y_offsets, add_time_in_day=True, add_day_in_week=True
@@ -29,7 +29,7 @@ def generate_graph_seq2seq_io_data(
     # y: (epoch_size, output_length, num_nodes, output_dim)
     """
     add_one_hot = False
-    num_time_slot_a_day     = 4
+    num_time_slot_a_day     = 4 # 6시간 단위 예측
     num_day_a_week          = 7
     print("warning: number of time slot in a day is set to {0}".format(num_time_slot_a_day))
     print(f"df_shape: {df.shape}")
@@ -106,12 +106,15 @@ def generate_train_val_test(args, scaler=None):
     )
     x_test, y_test = x[-num_test:], y[-num_test:]
 
-    if scaler is not None:
+    if scaler is not None: # 중요: X, y 전부 변환  (fit은 x_train에만)
         scaler.fit(x_train[:, :, :, 0].reshape(-1, 1))
         x_train[:, :, :, 0] = scaler.transform(x_train[:, :, :, 0].reshape(-1, 1)).reshape(x_train.shape[:3])
+        y_train[:, :, :, 0] = scaler.transform(y_train[:, :, :, 0].reshape(-1, 1)).reshape(y_train.shape[:3])
         x_val[:, :, :, 0] = scaler.transform(x_val[:, :, :, 0].reshape(-1, 1)).reshape(x_val.shape[:3])
+        y_val[:, :, :, 0] = scaler.transform(y_val[:, :, :, 0].reshape(-1, 1)).reshape(y_val.shape[:3])
         x_test[:, :, :, 0] = scaler.transform(x_test[:, :, :, 0].reshape(-1, 1)).reshape(x_test.shape[:3])
-        fd = open(os.path.join(args.output_dir, 'scaler.pkl'), 'wb')
+        y_test[:, :, :, 0] = scaler.transform(y_test[:, :, :, 0].reshape(-1, 1)).reshape(y_test.shape[:3])
+        fd = open(os.path.join(args.output_dir, 'scaler.pkl'), 'wb') # 나중에 모델 evaluate 코드에서 써야함으로 저장
         pickle.dump(scaler, fd)
         fd.close()
 
@@ -127,8 +130,8 @@ def generate_train_val_test(args, scaler=None):
         )
 
 if __name__ == '__main__':
-    seq_length_x    = 12
-    seq_length_y    = 12
+    seq_length_x    = 6 # 6 단위 예측 (36시간)
+    seq_length_y    = 6
     y_start         = 1
     dow             = True
     dataset         = "CHUNGNAM"

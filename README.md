@@ -1,3 +1,17 @@
+# 선문대 - 에이아이리더 ICP D2STGNN 모델 코드
+
+논문 "[Decoupled Dynamic Spatial-Temporal Graph Neural Network for Traffic Forecasting](https://arxiv.org/abs/2206.09112)"의 코드를 충남지역 인구수 예측을 위해 변형
+
+수정된 파일들
+- [모델 및 훈련 하이퍼파라미터 설정](/configs/CHUNGNAM.yaml)
+- [원본 데이터 및 데이터 전처리 코드 폴더](/datasets/raw_data/)
+- [네트워크 관련 메타데이터](/datasets/sensor_graph/adj_chungnam.pkl)
+- [MAPE 산식 수정](/models/losses.py)
+- [역변환 과정 수정](/models/trainer.py)
+- [커스텀 스케일러 추가](/utils/load_data.py)
+
+# 원본 README.md
+
 # Decoupled Dynamic Spatial-Temporal Graph Neural Network for Traffic Forecasting
 
 Code for our VLDB'22 paper: "[Decoupled Dynamic Spatial-Temporal Graph Neural Network for Traffic Forecasting](https://arxiv.org/abs/2206.09112)".

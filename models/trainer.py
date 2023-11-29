@@ -147,7 +147,6 @@ class trainer():
             
             # scale data
             if kwargs['_max'] is not None:  # traffic flow
-                print('hi')
                 ## inverse transform for both predict and real value.
                 predict = self.scaler(output.transpose(1,2).unsqueeze(-1), kwargs["_max"][0, 0, 0, 0], kwargs["_min"][0, 0, 0, 0])
                 real_val= self.scaler(testy.transpose(1, 2).unsqueeze(-1), kwargs["_max"][0, 0, 0, 0], kwargs["_min"][0, 0, 0, 0])
@@ -199,7 +198,7 @@ class trainer():
             realy   = scaler(realy.squeeze(-1), kwargs["_max"][0, 0, 0, 0], kwargs["_min"][0, 0, 0, 0])
             yhat    = scaler(yhat.squeeze(-1), kwargs["_max"][0, 0, 0, 0], kwargs["_min"][0, 0, 0, 0])
         else:
-            realy   = scaler.inverse_transform(realy[:, :, :, 0])
+            realy   = scaler.inverse_transform(realy[:, :, :, 0]) # target 특성만 역변환 
             yhat    = scaler.inverse_transform(yhat)
         
         # summarize the results.
@@ -207,7 +206,7 @@ class trainer():
         amape   = []
         armse   = []
 
-        for i in range(6):
+        for i in range(6): # 6단위 예측
             # For horizon i, only calculate the metrics **at that time** slice here.
             pred    = yhat[:,:,i]
             real    = realy[:,:,i]

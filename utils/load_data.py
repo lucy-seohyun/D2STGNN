@@ -156,6 +156,7 @@ def load_dataset(data_dir, batch_size, valid_batch_size, test_batch_size, datase
         data_dict['scaler']         = re_max_min_normalization
 
     else:   # traffic speed
+        # 커스텀 스케일러 적용
         scaler  = ChainedTransformer(mean=data_dict['x_train'][..., 0].mean(), std=data_dict['x_train'][..., 0].std())    # we only see the training data.
 
         for mode in ['train', 'val', 'test']:
@@ -170,6 +171,9 @@ def load_dataset(data_dir, batch_size, valid_batch_size, test_batch_size, datase
 
     return data_dict
 
+"""
+데이터 전처리과정에서 사용한 스케일러 불러온 후 표준화 스케일러 적용 
+"""
 import pickle
 class ChainedTransformer():
     def __init__(self, mean, std):

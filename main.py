@@ -170,7 +170,7 @@ def main(**kwargs):
     else:
         engine.test(model, save_path_resume, device, dataloader, scaler, model_name, save=False, _max=_max, _min=_min, loss=engine.loss, dataset_name=dataset_name)
 
-    torch.save(model, 'trained_model.pth')
+    torch.save(model, 'trained_model.pth') # 모델 저장
 
 if __name__ == '__main__':
     t_start = time.time()

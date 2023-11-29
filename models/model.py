@@ -55,7 +55,7 @@ class D2STGNN(nn.Module):
         self._num_layers    = 5
 
         model_args['use_pre']   = False
-        model_args['dy_graph']  = False
+        model_args['dy_graph']  = False # 다이나믹 그래프 OFF
         model_args['sta_graph'] = True
 
         self._model_args    = model_args
