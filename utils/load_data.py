@@ -156,7 +156,7 @@ def load_dataset(data_dir, batch_size, valid_batch_size, test_batch_size, datase
         data_dict['scaler']         = re_max_min_normalization
 
     else:   # traffic speed
-        scaler  = StandardScaler(mean=data_dict['x_train'][..., 0].mean(), std=data_dict['x_train'][..., 0].std())    # we only see the training data.
+        scaler  = ChainedTransformer(mean=data_dict['x_train'][..., 0].mean(), std=data_dict['x_train'][..., 0].std())    # we only see the training data.
 
         for mode in ['train', 'val', 'test']:
             # continue
@@ -169,6 +169,22 @@ def load_dataset(data_dir, batch_size, valid_batch_size, test_batch_size, datase
         data_dict['scaler']         = scaler
 
     return data_dict
+
+import pickle
+class ChainedTransformer():
+    def __init__(self, mean, std):
+        minmax = pickle.load(open('./datasets/CHUNGNAM/scaler.pkl', 'rb'))
+        self.scale_ = np.float32(minmax.scale_)
+        self.min_ = np.float32(minmax.min_)
+        self.scaler = StandardScaler(mean=mean, std=std)
+    def transform(self, X):
+        X = X * self.scale_
+        X = X + self.min_
+        return self.scaler.transform(X)
+    def inverse_transform(self, X):
+        X = X - torch.Tensor(self.min_).to('cuda:0')
+        X = X / torch.Tensor(self.scale_).to('cuda:0')
+        return self.scaler.inverse_transform(X)
 
 def load_adj(file_path, adj_type):
     r"""
